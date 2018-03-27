@@ -149,9 +149,7 @@ void GetInterSet(LkNode *h1, LkNode *h2) {
     while (1) {
       while (list1 != NULL && list1->num) }
   }
-}*/
-
-int main(void) {
+}* main(void) {
   LkNode *h1 = new LkNode, *h2 = new LkNode;
   int arr1[5] = {1, 2, 3, 10, 9}, arr2[5] = {2, 4, 5, 8, 10};
 
