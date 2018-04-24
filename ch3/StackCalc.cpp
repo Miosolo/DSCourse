@@ -89,13 +89,14 @@ bool OpStack::GetTop(OpStack *const S, char &E) {
 
 bool DivideExpression(char *&, ExpFrag *&);
 int GetOpPiority(char, char);
-Elemtype Calc(char *);
-Elemtype SortOut(Elemtype, char, Elemtype);
+bool Calc(char *, Elemtype &);
+bool SortOut(Elemtype, char, Elemtype, Elemtype &);
 
 bool DivideExpression(char *&ExpPosi, ExpFrag *&E) {
   if (*ExpPosi == 0) {
     E->Frag.op = '#';
-    return false;
+    E->IsValue = false;
+    return true;
   }
 
   if (('0' <= *ExpPosi && *ExpPosi <= '9') || *ExpPosi == '-' ||
@@ -112,116 +113,124 @@ bool DivideExpression(char *&ExpPosi, ExpFrag *&E) {
              *ExpPosi == '/' || *ExpPosi == '(' || *ExpPosi == ')') {
     E->IsValue = false;
     E->Frag.op = *ExpPosi;
+    ExpPosi++;
+    return true;
   } else {
     E->Frag.op = 0;
     return false;
   }
-
-  ExpPosi++;
-  return true;
 }
 
+//-----------这里的优先级指op2->op1的----------------------
 int GetOpPiority(char op1, char op2) {
-  if ((op1 == '+' || op1 == '-' || op1 == '*' || op1 == '/' || op1 == ')' ||
-       op2 == '+' || op1 == '#') &&
-      (op2 == '+' || op2 == '-' || op2 == '(' || op2 == '*' || op2 == '/' ||
-       op2 == ')')) {
+  if ((op1 == '+' || op1 == '-' || op1 == '*' || op1 == '/' || op1 == '(' ||
+       op2 == ')') &&
+      (op2 == '+' || op2 == '-' || op2 == '*' || op2 == '/' || op2 == '(' ||
+       op2 == ')' || op2 == '#')) {
     const int Op1Poirity[128] = {['+'] = 1, ['-'] = 1,  ['*'] = 2,
                                  ['/'] = 2, ['('] = -1, [')'] = 0};
-    const int Op2Poirity[128] = {['+'] = 1, ['-'] = 1, ['*'] = 2,
-                                 ['/'] = 2, ['('] = 3, [')'] = 0};
+    const int Op2Poirity[128] = {['+'] = 1, ['-'] = 1,  ['*'] = 2, ['/'] = 2,
+                                 ['('] = 3, [')'] = -2, ['#'] = -3};
     return Op2Poirity[(int)op2] - Op1Poirity[(int)op1];
   } else {
     return INF;
   }
 }
 
-Elemtype Calc(char *Expression) {
+bool Calc(char *Expression, Elemtype &result) {
   ValueStack *VS = new class ValueStack;
   OpStack *OpS = new class OpStack;
   char *ExpPosi = Expression;
   ExpFrag *EF = new ExpFrag;
 
-  /*{ while (1) {
-     bool InputEnd = false;
-     if (!DivideExpression(ExpPosi, EF)) InputEnd = true;
+  while (1) {
+    if (DivideExpression(ExpPosi, EF)) {  // Get a number
+      if (EF->IsValue) {
+        ValueStack::Push(VS, EF->Frag.value);
+      } else {  // Get a symbol / Nothing
+        char TempLastOp;
 
-     if (EF->IsValue) {
-       ValueStack::Push(VS, EF->Frag.value);
-     } else {
-       char LastOp;
-       int piority;
+        if (OpStack::StackEmpty(OpS) && EF->Frag.op != '#') {
+          // First Op
+          OpStack::Push(OpS, EF->Frag.op);
+        } else {
+          while (1) {
+            if (OpStack::StackEmpty(OpS) && EF->Frag.op == '#') {
+              ValueStack::Pop(VS, result);
+              return true;
+            }
 
-       if (OpStack::GetTop(OpS, LastOp)) {
-         piority = GetOpPiority(LastOp, EF->Frag.op);
-       } else {
-         piority = 1;
-       }
+            if (OpStack::GetTop(OpS, TempLastOp)) {
+              // >= 1 ops in the stack
 
-       if (piority > 0) {
-         OpStack::Push(OpS, EF->Frag.op);
-       } else {
-         while (!ValueStack::StackEmpty(VS)) {
-           if (OpStack::GetTop(OpS, LastOp)) {
-             int TempPiority = GetOpPiority(LastOp, EF->Frag.op);
-
-             if (TempPiority <= 0) {
-               if (LastOp == '(') {
-                 continue;
-               } else {
-                 OpStack::Pop(OpS, LastOp);
-                 Elemtype LastValue, SecLastValue, CurValue;
-                 ValueStack::Pop(VS, LastValue);
-                 ValueStack::Pop(VS, SecLastValue);
-                 CurValue = SortOut(SecLastValue, LastOp, LastValue);
-                 if (CurValue == INF) {
-                   return INF;
-                 } else {
-                   ValueStack::Push(VS, CurValue);
-                 }
-               }
-             }
-           }
-         }
-       }
-     }
-   }}
- }*/
+              if (GetOpPiority(TempLastOp, EF->Frag.op) > 0) {
+                // This op is higher than its previous one
+                OpStack::Push(OpS, EF->Frag.op);
+                break;
+              } else {  // This is op is lower than its previous one
+                OpStack::Pop(OpS, TempLastOp);
+                if (EF->Frag.op == ')' && TempLastOp == '(') {  // if it meets()
+                  break;
+                } else {
+                  Elemtype TempLastVal, TempSecLastVal, TempResult = 0;
+                  ValueStack::Pop(VS, TempLastVal);
+                  ValueStack::Pop(VS, TempSecLastVal);
+                  if (SortOut(TempSecLastVal, TempLastOp, TempLastVal,
+                              TempResult)) {
+                    // legal expression
+                    ValueStack::Push(VS, TempResult);
+                  } else
+                    // Illegal expression
+                    return false;
+                }
+              }
+            } else {  // This is the first op of this expression
+              OpStack::Push(OpS, EF->Frag.op);
+              break;
+            }
+          }
+        }
+      }
+    } else
+      return false;  // Got invaild symbols
+  }
 }
 
-Elemtype SortOut(Elemtype v1, char op, Elemtype v2) {
+bool SortOut(Elemtype v1, char op, Elemtype v2, Elemtype &result) {
   switch (op) {
     case '+':
-      return (v1 + v2);
+      result = v1 + v2;
+      return true;
     case '-':
-      return (v1 - v2);
+      result = v1 - v2;
+      return true;
     case '*':
-      return (v1 * v2);
+      result = v1 * v2;
+      return true;
     case '/':
       if (v2) {
-        return (v1 / v2);
-      } else {
-        return INF;
-      }
+        result = v1 / v2;
+        return true;
+      }  // intentional drop-off
     default:
-      return INF;
+      return false;
   }
 }
 
 int main(void) {
-  char str[50] = "1+(2+3)";
+  char str[50];
 
   while (1) {
     cout << "Input the Expression" << endl;
+    memset(str, 0, size(str));
     if (cin >> str) {
-      Elemtype result = Calc(str);
-      cout << result << endl;
-    } else {
-      break;
+      Elemtype result;
+      if (Calc(str, result)) {
+        cout << result << endl;
+      } else {
+        cout << "Illegal Input" << endl;
+      }
     }
   }
-
-  free(str);
-
   return 0;
 }
