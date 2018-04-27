@@ -1,37 +1,12 @@
 #include <algorithm>
 #include <cstring>
 #include <iostream>
+#include <stack>
 using namespace std;
 
 typedef double Elemtype;
 #define MAXSIZE 200
 #define INF 0x0FFFFFFF
-
-class ValueStack {
- private:
-  Elemtype stack[MAXSIZE];
-  int top;
-
- public:
-  ValueStack(void);
-  static bool StackEmpty(ValueStack *const S);
-  static bool Push(ValueStack *const S, Elemtype E);
-  static bool Pop(ValueStack *const S, Elemtype &E);
-  static bool GetTop(ValueStack *const S, Elemtype &E);
-};
-
-class OpStack {
- private:
-  char stack[MAXSIZE];
-  int top;
-
- public:
-  OpStack(void);
-  static bool StackEmpty(OpStack *const S);
-  static bool Push(OpStack *const S, char C);
-  static bool Pop(OpStack *const S, char &C);
-  static bool GetTop(OpStack *const S, char &C);
-};
 
 typedef struct {
   bool IsValue;
@@ -40,52 +15,6 @@ typedef struct {
     char op;
   } Frag;
 } ExpFrag;
-
-ValueStack::ValueStack(void) : top(-1) {}
-bool ValueStack::StackEmpty(ValueStack *const S) {
-  return S->top == -1 ? true : false;
-}
-bool ValueStack::Push(ValueStack *const S, Elemtype E) {
-  if (S->top == MAXSIZE - 1) return false;
-
-  S->stack[++S->top] = E;
-  return true;
-}
-bool ValueStack::Pop(ValueStack *const S, Elemtype &E) {
-  if (StackEmpty(S)) return false;
-
-  E = S->stack[S->top--];
-  return true;
-}
-bool ValueStack::GetTop(ValueStack *const S, Elemtype &E) {
-  if (StackEmpty(S)) return false;
-
-  E = S->stack[S->top];
-  return true;
-}
-
-OpStack::OpStack(void) : top(-1) {}
-bool OpStack::StackEmpty(OpStack *const S) {
-  return S->top == -1 ? true : false;
-}
-bool OpStack::Push(OpStack *const S, char E) {
-  if (S->top == MAXSIZE - 1) return false;
-
-  S->stack[++S->top] = E;
-  return true;
-}
-bool OpStack::Pop(OpStack *const S, char &E) {
-  if (StackEmpty(S)) return false;
-
-  E = S->stack[S->top--];
-  return true;
-}
-bool OpStack::GetTop(OpStack *const S, char &E) {
-  if (StackEmpty(S)) return false;
-
-  E = S->stack[S->top];
-  return true;
-}
 
 bool DivideExpression(char *&, ExpFrag *&);
 int GetOpPiority(char, char);
@@ -138,54 +67,59 @@ int GetOpPiority(char op1, char op2) {
 }
 
 bool Calc(char *Expression, Elemtype &result) {
-  ValueStack *VS = new class ValueStack;
-  OpStack *OpS = new class OpStack;
+  stack<Elemtype> ValueStack;
+  stack<char> OpStack;
   char *ExpPosi = Expression;
   ExpFrag *EF = new ExpFrag;
 
   while (1) {
     if (DivideExpression(ExpPosi, EF)) {  // Get a number
       if (EF->IsValue) {
-        ValueStack::Push(VS, EF->Frag.value);
+        ValueStack.push(EF->Frag.value);
       } else {  // Get a symbol / Nothing
         char TempLastOp;
 
-        if (OpStack::StackEmpty(OpS) && EF->Frag.op != '#') {
+        if (OpStack.empty() && EF->Frag.op != '#') {
           // First Op
-          OpStack::Push(OpS, EF->Frag.op);
+          OpStack.push(EF->Frag.op);
         } else {
           while (1) {
-            if (OpStack::StackEmpty(OpS) && EF->Frag.op == '#') {
-              ValueStack::Pop(VS, result);
+            if (OpStack.empty() && EF->Frag.op == '#') {
+              result = ValueStack.top();
+              ValueStack.pop();
               return true;
             }
 
-            if (OpStack::GetTop(OpS, TempLastOp)) {
+            if (!OpStack.empty()) {
               // >= 1 ops in the stack
-
+              TempLastOp = OpStack.top();
               if (GetOpPiority(TempLastOp, EF->Frag.op) > 0) {
                 // This op is higher than its previous one
-                OpStack::Push(OpS, EF->Frag.op);
+                OpStack.push(EF->Frag.op);
                 break;
               } else {  // This is op is lower than its previous one
-                OpStack::Pop(OpS, TempLastOp);
+                OpStack.pop();
                 if (EF->Frag.op == ')' && TempLastOp == '(') {  // if it meets()
                   break;
                 } else {
                   Elemtype TempLastVal, TempSecLastVal, TempResult = 0;
-                  ValueStack::Pop(VS, TempLastVal);
-                  ValueStack::Pop(VS, TempSecLastVal);
+
+                  TempLastVal = ValueStack.top();
+                  ValueStack.pop();
+                  TempSecLastVal = ValueStack.top();
+                  ValueStack.pop();
+
                   if (SortOut(TempSecLastVal, TempLastOp, TempLastVal,
                               TempResult)) {
                     // legal expression
-                    ValueStack::Push(VS, TempResult);
+                    ValueStack.push(TempResult);
                   } else
                     // Illegal expression
                     return false;
                 }
               }
             } else {  // This is the first op of this expression
-              OpStack::Push(OpS, EF->Frag.op);
+              OpStack.push(EF->Frag.op);
               break;
             }
           }
