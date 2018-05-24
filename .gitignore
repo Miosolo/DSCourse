@@ -30,3 +30,9 @@
 *.exe
 *.out
 *.app
+
+# Test Database
+*.csv
+
+# Temp Code 
+tempCodeRunnerFile.*
