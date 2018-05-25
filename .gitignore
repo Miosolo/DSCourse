@@ -36,3 +36,8 @@
 
 # Temp Code 
 tempCodeRunnerFile.*
+temp*.cpp
+temp*.exe
+
+# Backups
+*.Bak 

@@ -1,4 +1,3 @@
-
 #include <algorithm>
 #include <cstring>
 #include <fstream>
@@ -20,12 +19,12 @@ typedef struct StuNode {
   }
 } StuNode;
 
-bool InitList(fstream *, StuNode *);
+bool InitList(ifstream *, StuNode *);
 void InsertNode(StuNode *, StuNode *);
 StuNode *GetMergedList(StuNode *, StuNode *);
 void ReverseList(StuNode *);
 
-bool InitList(fstream *infile, StuNode *list) {
+bool InitList(ifstream *infile, StuNode *list) {
   if (!infile->is_open()) return false;
 
   char buffer[50];
@@ -115,11 +114,8 @@ void ReverseList(StuNode *list) {
 
 int main(void) {
   //------------------task 1---------------------------
-  fstream *csv1 = new fstream;
-  csv1->open(
-      "C:/Users/mx_028/Dropbox/Programming/C++/DSCourse/Exper/Exp1_"
-      "StuInfo1.csv",
-      ios::in);
+  ifstream *csv1 = new ifstream;
+  csv1->open("./Exp1_StuInfo1.csv", ios::in);
   StuNode *list1 = new StuNode;
   list1->next = NULL;
 
@@ -132,32 +128,31 @@ int main(void) {
   }
 
   //--------------------task 2----------------------
-  cout << "\nTask 2: Insert the info of students (enter \"#\" as student ID to "
-          "exit)\n\n";
+  cout
+      << "\nTask 2: Insert the info of students (enter \"#\" as student's Name "
+         "to exit)\n\n";
   while (1) {
     StuNode *InputStu = new StuNode;
     InputStu->next = NULL;
     cout << "Input the student's name: " << endl;
     cin >> InputStu->Data.Name;
-    cout << "Input the student's age: " << endl;
-    cin >> InputStu->Data.Age;
-    cout << "Input the student's Student ID: " << endl;
-    cin >> InputStu->Data.StuID;
-
-    if (InputStu->Data.StuID[0] != '#')
-      InsertNode(InputStu, list1);
-    else {
+    if (InputStu->Data.Name[0] == '#') {
       delete InputStu;
       break;
     }
+
+    cout << "Input the student's age: " << endl;
+    cin >> InputStu->Data.Age;
+
+    cout << "Input the student's Student ID: " << endl;
+    cin >> InputStu->Data.StuID;
+
+    InsertNode(InputStu, list1);
   }
 
   //------------------task 3-------------------------
-  fstream *csv2 = new fstream;
-  csv2->open(
-      "C:/Users/mx_028/Dropbox/Programming/C++/DSCourse/Exper/Exp1_"
-      "StuInfo2.csv",
-      ios::in);
+  ifstream *csv2 = new ifstream;
+  csv2->open("Exp1_StuInfo2.csv", ios::in);
   StuNode *list2 = new StuNode;
   list2->next = NULL;
   InitList(csv2, list2);
@@ -174,5 +169,7 @@ int main(void) {
     cout << p->Data.Name << " " << p->Data.Age << " " << p->Data.StuID << endl;
 
   delete list1;  //递归释放所有结点（见析构函数）
+
+  system("Pause");
   return 0;
 }
