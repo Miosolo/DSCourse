@@ -21,7 +21,7 @@ typedef struct StuNode {
 
 bool InitList(ifstream *, StuNode *);
 void InsertNode(StuNode *, StuNode *);
-StuNode *GetMergedList(StuNode *, StuNode *);
+StuNode *GetMergedList(StuNode *, StuNode *&);
 void ReverseList(StuNode *);
 
 bool InitList(ifstream *infile, StuNode *list) {
@@ -70,7 +70,7 @@ void InsertNode(StuNode *stu, StuNode *list) {
   pnode->next = stu;
 }
 
-StuNode *GetMergedList(StuNode *list1, StuNode *list2) {
+StuNode *GetMergedList(StuNode *list1, StuNode *&list2) {
   StuNode *p1 = list1, *p2 = list2->next;
   while (p1->next != NULL && p2 != NULL) {
     int dis = strcmp(p1->next->Data.StuID, p2->Data.StuID);
@@ -95,6 +95,7 @@ StuNode *GetMergedList(StuNode *list1, StuNode *list2) {
   if (p2 != NULL) p1->next = p2;
   list2->next = NULL;
   delete list2;
+  list2 = NULL;
   return list1;
 }
 
@@ -110,6 +111,7 @@ void ReverseList(StuNode *list) {
   }
 
   list->next = TempHead->next;
+  delete TempHead;
 }
 
 int main(void) {
