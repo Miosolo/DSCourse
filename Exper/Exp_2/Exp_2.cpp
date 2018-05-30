@@ -171,10 +171,7 @@ const int MaxFileLength = (int)1e7;
 char buf[MaxFileLength];
 
 int main() {
-  FILE* raw = fopen(
-      "C:/Users/mx_028/Dropbox/Programming/C++/DSCourse/Exper/Exp_2/"
-      "The_Moonstone.txt",
-      "rb+");
+  FILE* raw = fopen("./The_Moonstone.txt", "rb+");
   if (raw == NULL) return 1;
 
   int len = fread(buf, 1, MaxFileLength, raw);
@@ -183,4 +180,7 @@ int main() {
 
   HT = InitHuffmanTree(buf);
   ShowHuffmanCode(*HT);
+
+  system("Pause");
+  return 0;
 }
