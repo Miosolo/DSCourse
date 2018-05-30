@@ -33,6 +33,7 @@
 
 # Test Database
 *.csv
+*.txt
 
 # Temp Code 
 tempCodeRunnerFile.*
