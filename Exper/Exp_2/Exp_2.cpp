@@ -180,6 +180,7 @@ int main() {
 
   HT = InitHuffmanTree(buf);
   ShowHuffmanCode(*HT);
+  delete HT;
 
   system("Pause");
   return 0;
