@@ -15,11 +15,6 @@ typedef struct HuffmanNode {
   HuffmanNode(char d = '\0', int w = 0, HuffmanNode* p = NULL,
               HuffmanNode* l = NULL, HuffmanNode* r = NULL)
       : data(d), weight(w), parent(p), lchild(l), rchild(r) {}
-  ~HuffmanNode() {
-    if (this->lchild != NULL) delete this->lchild;
-    if (this->rchild != NULL) delete this->rchild;
-    delete this;
-  }
 } HuffmanNode;
 
 typedef struct HuffmanTree {
@@ -28,7 +23,6 @@ typedef struct HuffmanTree {
 
  public:
   HuffmanTree(int n = 0, HuffmanNode* r = NULL) : AmountOfData(n), root(r) {}
-  ~HuffmanTree() { delete root; }
 } HuffmanTree;
 
 int Myisalnum(char);
@@ -101,6 +95,16 @@ HuffmanTree* InitHuffmanTree(char* RawData) {
     }
   }
 
+  cout << "Task 1: Analyse the characers' frenquency:" << endl
+       << "Source: Moon Stone" << endl
+       << "---------------" << endl;
+
+  for (int i = 0; i < 10 + 26 * 2; i++) {
+    cout << TempHuffmanNodeList[i].data << "\t" << TempHuffmanNodeList[i].amount
+         << endl;
+  }
+  cout << "---------------" << endl << endl;
+
   list<HuffmanNode*> HuffmanNodePendingList;
 
   for (int i = 0; i < 10 + 26 * 2; i++) {
@@ -138,12 +142,15 @@ void ShowHuffmanCode(HuffmanTree& HT) {
   NodeSt.push(HT.root);
   HuffmanNode* p;
 
+  cout << "Task 2: Show the Huffman Code: " << endl
+       << "---------------" << endl;
+
   while (!NodeSt.empty()) {
     p = NodeSt.top();
     NodeSt.pop();
 
     if (p->data != 0) {
-      cout << p->data << " ";
+      cout << p->data << "\t";
 
       trace.clear();
       HuffmanNode* q = p;
@@ -165,6 +172,8 @@ void ShowHuffmanCode(HuffmanTree& HT) {
       NodeSt.push(p->lchild);
     }
   }
+  cout << "---------------" << endl;
+  return;
 }
 
 const int MaxFileLength = (int)1e7;
@@ -180,7 +189,6 @@ int main() {
 
   HT = InitHuffmanTree(buf);
   ShowHuffmanCode(*HT);
-  delete HT;
 
   system("Pause");
   return 0;
