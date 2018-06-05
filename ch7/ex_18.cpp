@@ -1,7 +1,7 @@
 #include <algorithm>
 #include <iostream>
+#include <queue>
 #include <sstream>
-#include <stack>
 using namespace std;
 
 typedef char ElemType;
@@ -36,35 +36,24 @@ string GetStringBTree(BTreeNode *root) {
   return oss.str();
 }
 
-BTreeNode *GetBTreeCopy(BTreeNode *source) {
-  stack<BTreeNode *> sts, stt;
-  BTreeNode *target = new BTreeNode;
+void SwapLRChild(BTreeNode *root) {
+  if (!root) return;
 
-  if (source != NULL) {
-    sts.push(source);
-    stt.push(target);
-    BTreeNode *ps, *pt;
+  queue<BTreeNode *> qu;
+  BTreeNode *p = root;
+  qu.push(p);
 
-    while (!sts.empty()) {
-      ps = sts.top(), sts.pop();
-      pt = stt.top(), stt.pop();
-      pt->data = ps->data;
-      pt->rchild = pt->lchild = NULL;
-
-      if (ps->rchild != NULL) {
-        sts.push(ps->rchild);
-        pt->rchild = new BTreeNode;
-        stt.push(pt->rchild);
-      }
-      if (ps->lchild != NULL) {
-        sts.push(ps->lchild);
-        pt->lchild = new BTreeNode;
-        stt.push(pt->lchild);
-      }
+  while (!qu.empty()) {
+    p = qu.front();
+    qu.pop();
+    if (p) {
+      swap(p->lchild, p->rchild);
+      qu.push(p->rchild);
+      qu.push(p->rchild);
     }
   }
 
-  return target;
+  return;
 }
 
 int main() {
@@ -79,7 +68,10 @@ int main() {
     if (2 * i + 1 <= 25) NodeList[i].rchild = &NodeList[2 * i + 1];
   }
 
-  cout << GetStringBTree(GetBTreeCopy(&NodeList[1])) << endl;
+  cout << "Oringinal Tree: " << endl;
+  cout << GetStringBTree(&NodeList[1]) << endl;
 
-  return 0;
+  SwapLRChild(&NodeList[1]);
+  cout << "Mirror Tree: " << endl;
+  cout << GetStringBTree(&NodeList[1]) << endl;
 }

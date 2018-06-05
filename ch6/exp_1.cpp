@@ -147,7 +147,6 @@ int main(void) {
   TSMa = InitTSM(a);
   TSMb = InitTSM(b);
 
-
   PrintTransTSM(TSMa);
   PrintTSMSum(TSMa, TSMb);
   PrintTSMProduct(TSMa, TSMb);

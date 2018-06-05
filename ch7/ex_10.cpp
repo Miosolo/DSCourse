@@ -3,7 +3,7 @@
 #include <sstream>
 using namespace std;
 
-typedef int ElemType;
+typedef char ElemType;
 typedef struct BTreeNode {
   ElemType data;
   BTreeNode *lchild, *rchild;
@@ -36,15 +36,15 @@ string GetStringBTree(BTreeNode *root) {
 }
 
 int main() {
-  BTreeNode NodeList[32];
-  for (int i = 1; i <= 31; i++) {
-    NodeList[i].data = i;
+  BTreeNode NodeList[27];
+  for (int i = 1; i <= 26; i++) {
+    NodeList[i].data = (i - 1) + 'a';
     NodeList[i].lchild = NodeList[i].rchild = NULL;
   }
 
-  for (int i = 1; i <= 31; i++) {
-    if (2 * i <= 31) NodeList[i].lchild = &NodeList[2 * i];
-    if (2 * i + 1 <= 31) NodeList[i].rchild = &NodeList[2 * i + 1];
+  for (int i = 1; i <= 26; i++) {
+    if (2 * i <= 25) NodeList[i].lchild = &NodeList[2 * i];
+    if (2 * i + 1 <= 25) NodeList[i].rchild = &NodeList[2 * i + 1];
   }
 
   cout << GetStringBTree(&NodeList[1]) << endl;

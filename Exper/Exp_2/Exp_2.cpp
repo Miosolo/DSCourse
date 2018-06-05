@@ -25,20 +25,22 @@ typedef struct HuffmanTree {
   HuffmanTree(int n = 0, HuffmanNode* r = NULL) : AmountOfData(n), root(r) {}
 } HuffmanTree;
 
-int Myisalnum(char);
+typedef enum CharType { unknown, num, lower, upper } CharType;
+
+CharType Myisalnum(char);
 HuffmanTree* InitHuffmanTree(char*);
 void InsertNode(list<HuffmanNode*>& ls, HuffmanNode& ele);
 void ShowHuffmanCode(HuffmanTree&);
 
-inline int Myisalnum(char c) {
+inline CharType Myisalnum(char c) {
   if ('0' <= c && c <= '9')
-    return 1;
+    return num;
   else if ('a' <= c && c <= 'z')
-    return 2;
+    return lower;
   else if ('A' <= c && c <= 'Z')
-    return 3;
+    return upper;
   else
-    return 0;
+    return unknown;
 }
 
 inline void InsertNode(list<HuffmanNode*>& ls, HuffmanNode* ele) {
@@ -70,7 +72,6 @@ HuffmanTree* InitHuffmanTree(char* RawData) {
   } TempHuffmanNode;
   TempHuffmanNode TempHuffmanNodeList[10 + 26 * 2];
   const int NumBegin = 0, LowerLetterBeg = 10, UpperLetterBeg = 36;
-  const int IsNum = 1, IsLowerLetter = 2, IsUpperLetter = 3;
 
   for (int i = 0; i < 10 + 26 * 2; i++) {
     if (NumBegin <= i && i < LowerLetterBeg)
@@ -83,14 +84,16 @@ HuffmanTree* InitHuffmanTree(char* RawData) {
 
   for (int i = 0; RawData[i] != 0; i++) {
     switch (Myisalnum(RawData[i])) {
-      case IsNum:
+      case num:
         TempHuffmanNodeList[NumBegin + RawData[i] - '0'].amount++;
         break;
-      case IsLowerLetter:
+      case lower:
         TempHuffmanNodeList[LowerLetterBeg + RawData[i] - 'a'].amount++;
         break;
-      case IsUpperLetter:
+      case upper:
         TempHuffmanNodeList[UpperLetterBeg + RawData[i] - 'A'].amount++;
+        break;
+      default:
         break;
     }
   }
@@ -139,6 +142,7 @@ HuffmanTree* InitHuffmanTree(char* RawData) {
 void ShowHuffmanCode(HuffmanTree& HT) {
   stack<HuffmanNode*> NodeSt;
   vector<bool> trace;
+  trace.reserve(20);
   NodeSt.push(HT.root);
   HuffmanNode* p;
 
