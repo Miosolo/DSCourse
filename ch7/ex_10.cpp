@@ -12,7 +12,7 @@ typedef struct BTreeNode {
 void GetStringBTreeRecur(BTreeNode *root, ostringstream &oss) {
   if (root != NULL) {
     oss << root->data;
-    if (root->rchild != NULL || root->rchild != NULL) {
+    if (root->lchild != NULL || root->rchild != NULL) {
       oss << "(";
       if (root->lchild != NULL) GetStringBTreeRecur(root->lchild, oss);
       oss << ",";
@@ -43,8 +43,8 @@ int main() {
   }
 
   for (int i = 1; i <= 26; i++) {
-    if (2 * i <= 25) NodeList[i].lchild = &NodeList[2 * i];
-    if (2 * i + 1 <= 25) NodeList[i].rchild = &NodeList[2 * i + 1];
+    if (2 * i <= 26) NodeList[i].lchild = &NodeList[2 * i];
+    if (2 * i + 1 <= 26) NodeList[i].rchild = &NodeList[2 * i + 1];
   }
 
   cout << GetStringBTree(&NodeList[1]) << endl;

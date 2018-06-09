@@ -36,6 +36,7 @@
 *.txt
 
 # Temp Code 
+test*.*
 tempCodeRunnerFile.*
 temp*.cpp
 temp*.exe

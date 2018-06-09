@@ -39,8 +39,11 @@ bool IsWellNested(char *Expression) {
 }
 
 int main(void) {
-  char str[1000] = "{[][(()]}";
-  cout << IsWellNested(str) << endl;
+  cout << "Enter your expression to check whether it's well nested. " << endl
+       << endl;
+
+  char str[1000];
+  while (cin >> str) cout << boolalpha << IsWellNested(str) << endl << endl;
 
   return 0;
 }

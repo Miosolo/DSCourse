@@ -16,9 +16,14 @@ void GetReverseStrRec(char* str, char* rstr, int n = 0) {
 }
 
 int main(void) {
-  char str[20] = "abcdefg";
-  char rstr[20] = "\0";
+  char str[100];
+  char rstr[100] = "\0";
 
-  GetReverseStrRec(str, rstr);
-  cout << rstr << endl;
+  cout << "Enter the string: " << endl;
+  while (cin.getline(str, 100)) {
+    GetReverseStrRec(str, rstr);
+    cout << "Reverse string: " << rstr << endl << endl;
+  }
+
+  return 0;
 }

@@ -43,5 +43,6 @@ int main() {
     if (2 * i + 1 <= 25) NodeList[i].rchild = &NodeList[2 * i + 1];
   }
 
-  cout << GetSingleBranchNodeAmount(&NodeList[1]) << endl;
+  cout << "Amount of single-branch nodes: "
+       << GetSingleBranchNodeAmount(&NodeList[1]) << endl;
 }

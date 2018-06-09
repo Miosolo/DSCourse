@@ -79,7 +79,8 @@ int main() {
     if (2 * i + 1 <= 25) NodeList[i].rchild = &NodeList[2 * i + 1];
   }
 
-  cout << GetStringBTree(GetBTreeCopy(&NodeList[1])) << endl;
+  cout << "Oringinal Tree: " << GetStringBTree(&NodeList[1]) << endl << endl;
+  cout << "Copied Tree:" << GetStringBTree(GetBTreeCopy(&NodeList[1])) << endl;
 
   return 0;
 }

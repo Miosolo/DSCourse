@@ -55,7 +55,10 @@ int main() {
     if (2 * i + 1 <= 25) NodeList[i].rchild = &NodeList[2 * i + 1];
   }
 
-  cout << boolalpha << IsBTreeBrother(&NodeList[1], 'a', 'b') << endl;
+  cout << "Enter a pair of values: " << endl;
+  ElemType e1, e2;
+  cin >> e1 >> e2;
+  cout << boolalpha << IsBTreeBrother(&NodeList[1], e1, e2) << endl;
 
   return 0;
 }

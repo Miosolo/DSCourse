@@ -15,9 +15,11 @@ typedef struct DNode {
 #define CDNode DNode
 #endif
 
-void MergeCicularDoubleLink(CDNode *const h1, CDNode *h2, int i) {
+bool MergeCicularDoubleLink(CDNode *const h1, CDNode *h2, int i) {
   CDNode *InsertPosi;
-  if (i == 0) {
+  if (i < 0) {
+    return false;
+  } else if (i == 0) {
     InsertPosi = h1;
   } else {
     InsertPosi = h1;
@@ -36,7 +38,7 @@ void MergeCicularDoubleLink(CDNode *const h1, CDNode *h2, int i) {
   h2->next->piror = h1;
 
   delete h2;
-  return;
+  return true;
 }
 
 int main(void) {
@@ -51,6 +53,10 @@ int main(void) {
   }
   p->next = list1;
   list1->piror = p;
+  cout << "List 1: " << endl;
+  for (DNode *p = list1->next; p && p != list1; p = p->next)
+    cout << p->data << " <-> ";
+  cout << "↺" << endl << endl;
 
   DNode *list2 = new DNode;
   list2->data = 0xF0000000;
@@ -63,8 +69,22 @@ int main(void) {
   }
   p->next = list2;
   list2->piror = p;
+  cout << "List 2: " << endl;
+  for (DNode *p = list2->next; p && p != list2; p = p->next)
+    cout << p->data << " <-> ";
+  cout << "↺" << endl << endl;
 
-  MergeCicularDoubleLink(list1, list2, 1);
+  cout << "Enter your opreation code i: " << endl;
+  int i;
+  cin >> i;
+  if (!MergeCicularDoubleLink(list1, list2, i)) {
+    cout << "Merged List: " << endl;
+    for (DNode *p = list1->next; p && p != list1; p = p->next)
+      cout << p->data << " <-> ";
+    cout << "↺" << endl << endl;
+  } else {
+    cout << "Invalid Opreation. " << endl;
+  }
 
   return 0;
 }

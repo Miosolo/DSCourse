@@ -1,6 +1,7 @@
 #include <algorithm>
 #include <iostream>
 #include <queue>
+#include <sstream>
 using namespace std;
 
 #define INV 0
@@ -10,6 +11,32 @@ typedef struct BTreeNode {
   ElemType data;
   BTreeNode *lchild, *rchild;
 } BTreeNode;
+
+void GetStringBTreeRecur(BTreeNode *root, ostringstream &oss) {
+  if (root != NULL) {
+    oss << root->data;
+    if (root->lchild != NULL || root->rchild != NULL) {
+      oss << "(";
+      if (root->lchild != NULL) GetStringBTreeRecur(root->lchild, oss);
+      oss << ",";
+      if (root->rchild != NULL) GetStringBTreeRecur(root->rchild, oss);
+      oss << ")";
+    }
+  }
+  return;
+}
+
+string GetStringBTree(BTreeNode *root) {
+  ostringstream oss;
+
+  if (root != NULL) {
+    oss << "(";
+    GetStringBTreeRecur(root, oss);
+    oss << ")";
+  }
+
+  return oss.str();
+}
 
 inline ElemType GetNodeValue(BTreeNode *p) {
   if (!p)
@@ -83,6 +110,9 @@ int main() {
     if (2 * i + 1 <= 15) NodeList[i].rchild = &NodeList[2 * i + 1];
   }
 
-  cout << boolalpha << IsomorphicTree(&NodeList[1]) << endl;
+  cout << GetStringBTree(&NodeList[1]);
+  cout << endl
+       << "Whether the root's 2 subtree is isomorphic is: " << boolalpha
+       << IsomorphicTree(&NodeList[1]) << endl;
   return 0;
 }

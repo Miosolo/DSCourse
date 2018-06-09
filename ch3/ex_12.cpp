@@ -29,13 +29,35 @@ void ReverseCirQueue(CirQueue *CQ) {
   return;
 }
 
+void DispQueue(CirQueue &qu) {
+  if (qu.front + 1 == qu.rear)
+    return;
+  else if (qu.front + 1 < qu.rear) {
+    for (int i = qu.front + 1; i <= qu.rear; i++) cout << qu.data[i] << " ";
+    cout << endl;
+  } else {
+    for (int i = qu.front + 1; i <= MAXLEN + qu.rear; i++)
+      cout << qu.data[i % MAXLEN] << " ";
+    cout << endl;
+  }
+}
+
 int main(void) {
   CirQueue CQ = {.front = 19, .rear = 9};
   for (int i = 0; i < 10; i++) {
     CQ.data[i] = i;
   }
+  cout << "Initial queue: " << endl;
+  cout << "front: " << CQ.front << "\t"
+       << "rear: " << CQ.rear << endl;
+  DispQueue(CQ);
 
   ReverseCirQueue(&CQ);
+  cout << "Reversed queue: " << endl;
+  cout << "front: " << CQ.front << "\t"
+       << "rear: " << CQ.rear << endl;
+
+  DispQueue(CQ);
 
   return 0;
 }

@@ -49,7 +49,10 @@ int main() {
     if (2 * i + 1 <= 25) NodeList[i].rchild = &NodeList[2 * i + 1];
   }
 
-  ShowChildren(&NodeList[1], 'c');
+  cout << "Input the root node: " << endl;
+  ElemType ele;
+  cin >> ele;
+  ShowChildren(&NodeList[1], ele);
 
   return 0;
 }

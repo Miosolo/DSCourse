@@ -16,12 +16,20 @@ int main(void) {
     DigitQueue[i].rear = 0;
   }
 
-  int input;
-  while (cin >> input) {
-    if (input > 10) continue;
+  int input, inputCounter = 0;
+  while (1) {
+    cout << "Enter the No. " << inputCounter++ << " number" << endl;
+
+    if (!(cin >> input))
+      break;
+    else if (input > 10)
+      continue;
+
     DigitQueue[input].data[++DigitQueue[input].rear] = input;
   }
+  cout << endl;
 
+  cout << "Final queue: " << endl;
   for (int i = 0; i <= 9; i++) {
     if (DigitQueue[i].rear == 0) continue;
 

@@ -41,5 +41,5 @@ int main() {
     if (2 * i + 1 <= 25) NodeList[i].rchild = &NodeList[2 * i + 1];
   }
 
-  cout << GetMinNode(&NodeList[1]) << endl;
+  cout << "Minimum node: "<< GetMinNode(&NodeList[1]) << endl;
 }

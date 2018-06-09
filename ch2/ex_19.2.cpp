@@ -1,4 +1,6 @@
 #include <algorithm>
+#include <cstdlib>
+#include <ctime>
 #include <iostream>
 
 using namespace std;
@@ -9,36 +11,6 @@ typedef struct LNode {
   ElemType data;
   LNode *next;
 } LNode;
-
-void GetCombinedSet(LNode *const h1, LNode *const h2, LNode *&h3) {
-  LNode *p = h1;
-  h3 = new LNode;
-  h3->next = NULL;
-
-  bool JumptoH2 = false;
-  while (1) {
-    if ((p = p->next)) {
-      for (LNode *pnew = h3; pnew != NULL; pnew = pnew->next) {
-        if (pnew->next == NULL || pnew->next->data > p->data) {
-          LNode *NewNode = new LNode;
-          NewNode->data = p->data;
-          NewNode->next = pnew->next;
-          pnew->next = NewNode;
-          break;
-        } else if (pnew->next->data == p->data) {
-          break;
-        }
-      }
-    } else if (!JumptoH2) {
-      p = h2;
-      JumptoH2 = true;
-    } else {
-      break;
-    }
-  }
-
-  return;
-}
 
 void TailInsert(LNode *&tail, ElemType InsetedData) {
   tail->next = new LNode;
@@ -83,6 +55,8 @@ void GetCombinedIncreSet(LNode *h1, LNode *h2, LNode *&h3) {
 }
 
 int main(void) {
+  srand((unsigned)time(0));
+
   LNode *list1 = new LNode;
   list1->data = 0xF0000000;
   LNode *p = list1;
@@ -92,6 +66,9 @@ int main(void) {
     p = p->next;
   }
   p->next = NULL;
+  cout << "List 1: " << endl;
+  for (LNode *p = list1->next; p; p = p->next) cout << p->data << " -> ";
+  cout << " ∧ " << endl;
 
   LNode *list2 = new LNode;
   list2->data = 0xF0000000;
@@ -102,14 +79,15 @@ int main(void) {
     p = p->next;
   }
   p->next = NULL;
+  cout << "List 2: " << endl;
+  for (LNode *p = list2->next; p; p = p->next) cout << p->data << " -> ";
+  cout << " ∧ " << endl;
 
-  LNode *list3;
-
-  GetCombinedIncreSet(list1, list2, list3);
-  for (LNode *p = list3->next; p; p = p->next) {
-    cout << p->data << " ";
-  }
-  cout << endl;
+  LNode *listMI;
+  GetCombinedIncreSet(list1, list2, listMI);
+  cout << "Merged Incresing List: " << endl;
+  for (LNode *p = listMI->next; p; p = p->next) cout << p->data << " -> ";
+  cout << " ∧ " << endl;
 
   return 0;
 }

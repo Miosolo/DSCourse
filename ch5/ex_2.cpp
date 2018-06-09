@@ -26,9 +26,22 @@ ElemType GetAvgRecur(ElemType A[], int n) {
 }
 
 int main(void) {
-  ElemType A[5];
-  for (int i = 0; i < sizeof(A) / sizeof(ElemType); i++) A[i] = i;
+  const int MAX_LEN = 50;
+  ElemType A[MAX_LEN];
 
-  cout << GetAvgRecur(A, sizeof(A) / sizeof(ElemType)) << endl;
-  cout << GetAvgTailRecur(A, sizeof(A) / sizeof(ElemType)) << endl;
+  ElemType buf;
+  cout << "Enter a series of values: " << endl;
+
+  int counter = 0;
+  while (counter < MAX_LEN && (cin >> buf)) {
+    A[counter++] = buf;
+  }
+  if (counter == 0) return 1;
+
+  cout << "Get the average value recursively: " << GetAvgRecur(A, counter)
+       << endl;
+  cout << "Get the average value using tail recursion: "
+       << GetAvgTailRecur(A, counter) << endl;
+
+  return 0;
 }

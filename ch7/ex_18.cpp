@@ -48,7 +48,7 @@ void SwapLRChild(BTreeNode *root) {
     qu.pop();
     if (p) {
       swap(p->lchild, p->rchild);
-      qu.push(p->rchild);
+      qu.push(p->lchild);
       qu.push(p->rchild);
     }
   }

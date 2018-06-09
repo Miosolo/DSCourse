@@ -2,9 +2,11 @@
 #include <iostream>
 using namespace std;
 
-inline int GetDigits(unsigned long long n) { return ceil(log(n) / log(10)); }
-
 int main(void) {
-  unsigned long long n = 12345678901234567890;
-  cout << GetDigits(n) << endl;
+  unsigned long long n;
+  cout << "Enter the numbers: " << endl;
+
+  while (cin >> n) cout << ceil(log(n) / log(10)) << " digits. " << endl;
+
+  return 0;
 }

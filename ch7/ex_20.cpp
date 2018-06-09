@@ -18,7 +18,7 @@ bool IsCompleteBTree(BTreeNode *root) {
   SeqTree[1] = root;
 
   for (int depth = 0;; depth++) {
-    bool AllLeaves, full;
+    bool AllLeaves = true, full = true;
 
     for (int i = pow(2, depth); i < pow(2, depth + 1); i++) {
       AllLeaves = true, full = true;
@@ -49,15 +49,12 @@ int main() {
   }
 
   for (int i = 1; i <= 26; i++) {
-    /*if (i == 5) {
-      NodeList[i].lchild = NodeList[i].rchild = NULL;
-      continue;
-    }*/
     if (2 * i <= 25) NodeList[i].lchild = &NodeList[2 * i];
     if (2 * i + 1 <= 25) NodeList[i].rchild = &NodeList[2 * i + 1];
   }
 
-  cout << boolalpha << IsCompleteBTree(&NodeList[1]) << endl;
+  cout << "Whether it's a complete tree is: " << boolalpha
+       << IsCompleteBTree(&NodeList[1]) << endl;
 
   return 0;
 }

@@ -14,17 +14,24 @@ void function(char *exp) {
   char *p = exp;
 
   while ((EleCircle.rear + 1) % MAXLEN != EleCircle.front) {
+    cout << "Input is " << *p << ", ";
     if ('0' <= *p && *p <= '9') {
+      cout << "enqueue: ";
       EleCircle.rear = (EleCircle.rear + 1) % MAXLEN;
       EleCircle.data[EleCircle.rear] = *p;
     } else if ('a' <= *p && *p <= 'z') {
       if (EleCircle.front != EleCircle.rear) {
+        cout << "dequeue: ";
         EleCircle.front = (EleCircle.front + 1) % MAXLEN;
-      } else
+      } else {
+        cout << "Nothing to enqueue. " << endl;
         return;
+      }
     } else {
       return;
     }
+
+    if (EleCircle.front == EleCircle.rear) cout << "ø";
 
     for (int i = EleCircle.front + 1; i <= EleCircle.rear; i++)
       cout << EleCircle.data[i] << " ";
@@ -35,8 +42,13 @@ void function(char *exp) {
 }
 
 int main(void) {
-  char str[50] = "143abc1cc;";
-  function(str);
+  char str[50];
+  while (1) {
+    cout << "Enter your expression: ";
+    if (!(cin >> str)) break;
+
+    function(str);
+  }
 
   return 0;
 }

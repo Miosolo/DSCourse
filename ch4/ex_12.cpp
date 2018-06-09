@@ -1,48 +1,52 @@
-#include <algorithm>
-#include <cstring>
 #include <iostream>
 using namespace std;
 
-int GetNextArrMax(char *pat) {
-  int PatLen = strlen(pat);
-  int cur = 1, k = -1;
-  int *next = new int[PatLen + 1];
-  // next[n]显示了前面字串的前缀-后缀重复，为了求得每个字符的前缀重复串长度构造(n+1)项
-  next[0] = k;
+typedef char ElemType;
+typedef struct LNode {
+  ElemType data;
+  LNode *next;
+} LNode;
+typedef LNode LStrNode;
 
-  while (cur <= PatLen) {
-    if (k == -1 || pat[cur] == pat[k]) {
-      k++, cur++;
-      next[cur] = k;
-    } else
-      k = next[k];
-  }
+void DeleteChar(LStrNode *strHead, char elem) {
+  LStrNode *cur, *pre;
 
-  int result = *max_element(next + 1, next + PatLen);
-  delete[] next;
-  return result;
-}
-
-void GetMaxSubString(char *str, int &MaxIndex, int &Length) {
-  int StrLen = strlen(str);
-  Length = 0, Length = 0;
-
-  for (int i = 0; i < StrLen; i++) {
-    int ThisMax = GetNextArrMax(str + i);
-    if (ThisMax >= Length) {
-      Length = ThisMax;
-      MaxIndex = i;
+  for (cur = strHead->next, pre = strHead; cur; pre = cur, cur = cur->next) {
+    if (cur->data == elem) {
+      pre->next = cur->next;
+      delete cur;
+      cur = pre;
     }
   }
+
   return;
 }
 
 int main(void) {
-  char str[] = "abbabbabbabbabb";
-  int MI, L;
+  char str[200];
+  while (1) {
+    cout << "Enter a string: " << endl;
+    if (!(cin >> str)) break;
 
-  GetMaxSubString(str, MI, L);
-  cout << MI << " " << L << endl;
+    LStrNode *head = new LStrNode, *pNode = head;
+    for (char *p = str; *p; p++) {
+      pNode->next = new LStrNode;
+      pNode = pNode->next;
+      pNode->data = *p;
+      pNode->next = NULL;
+    }
+
+    ElemType del;
+    cout << "Enter the element you'd like to remove: ";
+    if (!(cin >> del)) break;
+
+    DeleteChar(head, del);
+    cout << "Result: " << endl;
+    for (LStrNode *p = head->next; p != NULL; p = p->next) {
+      cout << p->data << " ";
+    }
+    cout << endl << endl;
+  }
 
   return 0;
 }

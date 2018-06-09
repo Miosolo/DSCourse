@@ -1,11 +1,12 @@
 #include <algorithm>
+#include <cstdio>
 #include <cstring>
 #include <iostream>
 using namespace std;
 
 #define MaxSize 16
 #define M 4
-#define N 4
+#define N M
 
 typedef int ElemType;
 typedef struct {
@@ -44,9 +45,8 @@ void PrintTransTSM(TSMartrix* TSM) {
   GetTSMTranIndex(TSM, index);
 
   for (int i = 0; index[i] >= 0; i++)
-    cout << TSM->data[index[i]].col << " " << TSM->data[index[i]].row << " "
-         << TSM->data[index[i]].d << endl;
-
+    printf("%-6d%-6d%-6d\n", TSM->data[index[i]].col, TSM->data[index[i]].row,
+           TSM->data[index[i]].d);
   return;
 }
 
@@ -70,13 +70,13 @@ void PrintTSMSum(TSMartrix* TSM1, TSMartrix* TSM2) {
 
   while (p1 < &TSM1->data[TSM1->num] && p2 < &TSM2->data[TSM2->num]) {
     if (p1->row < p2->row || (p1->row == p2->row && p1->col < p2->col)) {
-      cout << p1->row << " " << p1->col << " " << p1->d << endl;
+      printf("%-6d%-6d%-6d\n", p1->row, p1->col, p1->d);
       p1++;
     } else if (p1->row == p2->row && p1->col == p2->col) {
-      cout << p1->row << " " << p1->col << " " << p1->d + p2->d << endl;
+      printf("%-6d%-6d%-6d\n", p1->row, p1->col, p1->d + p2->d);
       p1++, p2++;
     } else {
-      cout << p2->row << " " << p2->col << " " << p2->d << endl;
+      printf("%-6d%-6d%-6d\n", p2->row, p2->col, p2->d);
       p2++;
     }
   }
@@ -133,23 +133,58 @@ void PrintTSMProduct(TSMartrix* TSMa, TSMartrix* TSMb) {
           }
         }
       }
-      if (TempProduct != 0)
-        cout << Pi << " " << Pj << " " << TempProduct << endl;
+      if (TempProduct != 0) printf("%-6d%-6d%-6d\n", Pi, Pj, TempProduct);
     }
   }
 }
 
 int main(void) {
   int a[M][N] = {{1, 0, 3, 0}, {0, 1, 0, 0}, {0, 0, 1, 0}, {0, 0, 1, 1}};
-  int b[M][N] = {{3, 0, 0, 0}, {0, 4, 0, 0}, {0, 0, 1, 0}, {0, 0, 0, 2}};
+  int b[M][N] = {{3, 0, 2, 0}, {0, 4, 0, 5}, {0, 0, 1, 0}, {0, 0, 0, 2}};
   TSMartrix *TSMa, *TSMb;
+
+  cout << "Martrix A: " << endl;
+  for (int i = 0; i < M; i++) {
+    for (int j = 0; j < N; j++) cout << a[i][j] << " ";
+    cout << endl;
+  }
+  cout << endl;
+
+  cout << "Martrix B: " << endl;
+  for (int i = 0; i < M; i++) {
+    for (int j = 0; j < N; j++) cout << b[i][j] << " ";
+    cout << endl;
+  }
+  cout << endl;
 
   TSMa = InitTSM(a);
   TSMb = InitTSM(b);
 
+  cout << "TSM of A: " << endl << "Row   Col   Value " << endl;
+  for (int i = 0; i < TSMa->num; i++) {
+    printf("%-6d%-6d%-6d\n", TSMa->data[i].row, TSMa->data[i].col,
+           TSMa->data[i].d);
+  }
+  cout << endl;
+
+  cout << "TSM of B: " << endl << "Row   Col   Value " << endl;
+  for (int i = 0; i < TSMb->num; i++) {
+    printf("%-6d%-6d%-6d\n", TSMb->data[i].row, TSMb->data[i].col,
+           TSMb->data[i].d);
+  }
+  cout << endl;
+
+  cout << "TSM of A^T: " << endl << "Row   Col   Value " << endl;
   PrintTransTSM(TSMa);
+  cout << endl;
+
+  cout << "TSM of A + B: " << endl << "Row   Col   Value " << endl;
   PrintTSMSum(TSMa, TSMb);
+  cout << endl;
+
+  cout << "TSM of AB: " << endl << "Row   Col   Value " << endl;
   PrintTSMProduct(TSMa, TSMb);
+  cout << endl;
 
   return 0;
 }

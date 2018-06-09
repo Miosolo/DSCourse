@@ -57,7 +57,8 @@ int main() {
     if (2 * i + 1 <= 25) NodeList[i].rchild = &NodeList[2 * i + 1];
   }
 
-  cout << GetLeafAmountInDepth(&NodeList[1], 4) << endl;
+  cout << GetLeafAmountInDepth(&NodeList[1], 4)
+       << " Leaves of depth 4 in the tree. " << endl;
 
   return 0;
 }

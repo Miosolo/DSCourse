@@ -23,9 +23,10 @@ bool LocateNode(DNode *const h, ElemType x) {
     for (p = freqHead->next; p != NULL && p->freq == ComFreq; p = p->next) {
       if (p->data == x) {
         p->freq++;
+        xFound++;
 
         DNode *pre = p->piror;
-        p->next->piror = pre;
+        if (p->next) p->next->piror = pre;
         pre->next = p->next;
         freqHead->next->piror = p;
         p->next = freqHead->next;
@@ -45,18 +46,33 @@ bool LocateNode(DNode *const h, ElemType x) {
 
 int main(void) {
   DNode *DH = new DNode, *p = DH;
-  DH->piror = NULL, DH->data = DH->freq = -1;
+  DH->piror = DH->next = NULL, DH->data = DH->freq = -1;
 
   for (int i = 0; i < 10; i++) {
     p->next = new DNode;
     p->next->piror = p;
-    p->next->freq = (10 - i) / 2;
+    p->next->freq = 0;
     p->next->data = i;
     p = p->next;
   }
   p->next = NULL;
 
-  LocateNode(DH, 2);
+  ElemType input;
+  while (1) {
+    cout << endl;
+
+    for (DNode *p = DH->next; p; p = p->next) cout << p->data << " -> ";
+    cout << " ∧ " << endl;
+
+    cout << "Enter the element you want to locale: " << endl;
+
+    if (cin >> input) {
+      if (!LocateNode(DH, input))
+        cout << "Element not found in the list" << endl;
+    } else
+      break;
+  }
+  cout << "Opreation Aborted." << endl;
 
   return 0;
 }
