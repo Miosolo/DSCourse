@@ -27,11 +27,24 @@ bool InsertElem(SqList *&L, ElemType x) {
 }
 
 int main(void) {
-  SqList arr = {10, {1, 2, 3, 4, 5, 6, 7, 8, 9, 0}};
+  SqList arr = {10, {0, 1, 2, 3, 4, 5, 6, 7, 8, 9}};
   SqList *L = &arr;
-  InsertElem(L, 3);
+  cout << "Original array: ";
+  for (int i = 0; i < arr.length; i++) cout << arr.data[i] << " ";
+  cout << endl;
 
-  for (int i = 0; i < L->length; i++) printf("%d ", L->data[i]);
-  putchar('\n');
+  while (1) {
+    ElemType ele;
+    cout << "Enter the number to insert: ";
+
+    if (cin >> ele)
+      InsertElem(L, ele);
+    else
+      break;
+
+    cout << "Current array: ";
+    for (int i = 0; i < L->length; i++) printf("%d ", L->data[i]);
+    cout << endl;
+  }
   return 0;
 }

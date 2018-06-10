@@ -1,5 +1,8 @@
 #include <algorithm>
+#include <cmath>
+#include <cstdlib>
 #include <cstring>
+#include <ctime>
 #include <iostream>
 using namespace std;
 
@@ -32,9 +35,19 @@ bool ZeroPartition(SqList *L) {
 }
 
 int main(void) {
-  SqList arr = {8, {-5, -3, 4, 23, 5, -8, -9, -30}};
+  srand((unsigned)time(0));
+  const int LIST_LEN = 20;
+
+  SqList arr = {.length = LIST_LEN};
+  cout << "Random origianl array: " << endl;
+  for (int i = 0; i < LIST_LEN; i++) {
+    arr.data[i] = pow(-1, rand() % 2) * (rand() % 100);
+    cout << arr.data[i] << " ";
+  }
+
   ZeroPartition(&arr);
 
+  cout << endl << "Current array: " << endl;
   for (int i = 0; i < arr.length; i++) printf("%d ", arr.data[i]);
   putchar('\n');
 
