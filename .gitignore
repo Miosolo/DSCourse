@@ -43,3 +43,6 @@ temp*.exe
 
 # Backups
 *.Bak 
+
+# Others
+.txt
